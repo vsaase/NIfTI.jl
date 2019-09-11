@@ -255,7 +255,7 @@ function getaffine(h::NIfTI1Header)
         return Float64[
              pixdim[2] 0         0          0 0
                        0 pixdim[3]          0 0
-                       0         0  bitpix[4] 0
+                       0         0  pixdim[4] 0
                        0         0          0 1
         ]
     end
@@ -373,11 +373,12 @@ end
 esize(ex::NIfTI1Extension) = 8 + ceil(Int, length(ex.edata)/16)*16
 
 # Validates the header of a volume and updates it to match the volume's contents
-function niupdate(vol::NIVolume{T}) where {T}
+function niupdate(vol::NIVolume)
     vol.header.sizeof_hdr = SIZEOF_HDR
     vol.header.dim = nidim(vol.raw)
-    vol.header.datatype = nidatatype(T)
-    vol.header.bitpix = nibitpix(T)
+    t = eltype(vol.raw)
+    vol.header.datatype = nidatatype(t)
+    vol.header.bitpix = nibitpix(t)
     vol.header.vox_offset = isempty(vol.extensions) ? Int32(352) :
         Int32(mapreduce(esize, +, vol.extensions) + SIZEOF_HDR)
     vol
