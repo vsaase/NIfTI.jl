@@ -143,10 +143,7 @@ mutable struct NIVolume{T<:Number,N,R} <: AbstractArray{T,N}
     header::NIfTI1Header
     extensions::Vector{NIfTI1Extension}
     raw::R
-
 end
-NIVolume(header::NIfTI1Header, extensions::Vector{NIfTI1Extension}, raw::R) where {R}=
-    niupdate(new(header, extensions, raw))
 
 NIVolume(header::NIfTI1Header, extensions::Vector{NIfTI1Extension}, raw::AbstractArray{T,N}) where {T<:Number,N} =
     NIVolume{typeof(one(T)*1f0+1f0),N,typeof(raw)}(header, extensions, raw)
