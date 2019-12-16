@@ -231,7 +231,12 @@ function getaffine(h::NIfTI1Header)
         b::Float64 = h.quatern_b
         c::Float64 = h.quatern_c
         d::Float64 = h.quatern_d
-        a = sqrt(1 - b*b - c*c - d*d)
+        r = b*b + c*c + d*d
+        if isapprox(r,1) # in some edge cases r is marginally larger than 1
+            a = 0
+        else
+            a = sqrt(1 - r)
+        end
         A = [
             a*a+b*b-c*c-d*d   2*b*c-2*a*d       2*b*d+2*a*c
             2*b*c+2*a*d       a*a+c*c-b*b-d*d   2*c*d-2*a*b
