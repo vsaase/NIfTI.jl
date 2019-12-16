@@ -232,7 +232,7 @@ function getaffine(h::NIfTI1Header)
         c::Float64 = h.quatern_c
         d::Float64 = h.quatern_d
         r = b*b + c*c + d*d
-        if isapprox(r,1) # in some edge cases r is marginally larger than 1
+        if isapprox(r,1, rtol = sqrt(eps(Float32))) # in some edge cases r is marginally larger than 1
             a = 0
         else
             a = sqrt(1 - r)
